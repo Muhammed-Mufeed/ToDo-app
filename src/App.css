@@ -1,18 +1,83 @@
+/* App.css */
 .App {
-  font-family: sans-serif;
   max-width: 500px;
-  margin: 20px auto;
+  margin: 30px auto;
+  padding: 20px;
+  background: #fdfdfd;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  text-align: center;
+  font-family: Arial, sans-serif;
 }
 
-input[type="text"] {
-  padding: 5px;
-  margin-right: 5px;
+.todo-input {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 15px;
 }
 
-button {
-  margin-left: 3px;
+.todo-input input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
-li {
-  margin: 5px 0;
+.todo-input button {
+  padding: 8px 12px;
+  border: none;
+  background: #4caf50;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.todo-input button:hover {
+  background: #45a049;
+}
+
+.todo-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fafafa;
+  border: 1px solid #eee;
+  padding: 8px;
+  margin-bottom: 8px;
+  border-radius: 5px;
+}
+
+.todo-item span {
+  flex: 1;
+  text-align: left;
+  margin-left: 10px;
+}
+
+.todo-item button {
+  margin-left: 5px;
+  padding: 4px 8px;
+  border: none;
+  background: #2196f3;
+  color: white;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.todo-item button:hover {
+  background: #0b7dda;
+}
+
+.todo-item button:last-child {
+  background: #f44336;
+}
+
+.todo-item button:last-child:hover {
+  background: #da190b;
 }

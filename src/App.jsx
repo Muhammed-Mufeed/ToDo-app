@@ -1,44 +1,36 @@
 import { useState } from 'react';
-import './App.css'; // optional: style as you like
+import './App.css';
+import { Toaster, toast } from 'sonner'; // import Toaster + toast
+import TodoInput from './components/TodoInput';
+import TodoList from './components/TodoList';
 
 function App() {
-  // State: list of todos
   const [todos, setTodos] = useState([]);
-  // State: new task input value
   const [newTask, setNewTask] = useState('');
 
-  // Handle typing in the input
-  const handleInputChange = (e) => {
-    setNewTask(e.target.value);
-  };
+  const handleInputChange = (e) => setNewTask(e.target.value);
 
-  // Add new task (prevent duplicate)
   const handleAddTask = () => {
     const trimmed = newTask.trim();
-    if (!trimmed) return; // ignore empty
+    if (!trimmed) return;
+
     if (todos.find(todo => todo.text.toLowerCase() === trimmed.toLowerCase())) {
-      alert("Task already exists!");
+      toast.error("Task already exists!"); // use toast instead of alert
       return;
     }
 
-    const newTodo = {
-      id: Date.now(), // unique id
-      text: trimmed,
-      completed: false
-    };
-
+    const newTodo = { id: Date.now(), text: trimmed, completed: false };
     setTodos([...todos, newTodo]);
-    setNewTask(''); // clear input
+    setNewTask('');
+    toast.success("Task added!"); // optional: show success toast
   };
 
-  // Toggle complete/incomplete
   const toggleComplete = (id) => {
     setTodos(todos.map(todo =>
       todo.id === id ? { ...todo, completed: !todo.completed } : todo
     ));
   };
 
-  // Edit task text
   const handleEdit = (id) => {
     const todoToEdit = todos.find(todo => todo.id === id);
     const newText = prompt("Edit task:", todoToEdit.text);
@@ -46,62 +38,48 @@ function App() {
       const trimmed = newText.trim();
       if (!trimmed) return;
 
-      // prevent duplicate
       if (todos.find(todo => todo.text.toLowerCase() === trimmed.toLowerCase() && todo.id !== id)) {
-        alert("Task already exists!");
+        toast.error("Task already exists!"); // toast here too
         return;
       }
 
       setTodos(todos.map(todo =>
         todo.id === id ? { ...todo, text: trimmed } : todo
       ));
+      toast.success("Task updated!"); // optional: show success toast
     }
   };
 
-
-  // Delete task
   const handleDelete = (id) => {
     setTodos(todos.filter(todo => todo.id !== id));
+    toast.success("Task deleted!"); // optional
   };
 
-  // Count completed tasks
   const completedCount = todos.filter(todo => todo.completed).length;
-
-  // Sort: incomplete tasks first, completed at bottom
   const sortedTodos = [...todos].sort((a, b) => a.completed - b.completed);
 
   return (
     <div className="App">
+      {/* Add Toaster here at the top-level of your JSX */}
+      <Toaster richColors />
+      
       <h2> My Todo App</h2>
 
-      {/* Input to add new task */}
-      <input
-        type="text"
-        value={newTask}
-        onChange={handleInputChange}
-        placeholder="Enter a new task"
+      <TodoInput
+        newTask={newTask}
+        handleInputChange={handleInputChange}
+        handleAddTask={handleAddTask}
       />
-      <button onClick={handleAddTask}>Add Task</button>
 
       <p>Total tasks: {todos.length}</p>
       <p>Completed tasks: {completedCount}</p>
 
-      <ul>
-        {sortedTodos.map(todo => (
-          <li key={todo.id}>
-            <input
-              type="checkbox"
-              checked={todo.completed}
-              onChange={() => toggleComplete(todo.id)}
-            />
-            <span style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}>
-              {todo.text}
-            </span>
-            <button onClick={() => handleEdit(todo.id)}>Edit</button>
-            <button onClick={() => handleDelete(todo.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+      <TodoList
+        todos={sortedTodos}
+        toggleComplete={toggleComplete}
+        handleEdit={handleEdit}
+        handleDelete={handleDelete}
+      />
     </div>
   );
 }
